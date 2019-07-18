@@ -11,8 +11,8 @@ while choice != 'Quit':
             SvD = None
             while SvD not in ['Static','Dynamic']:
                 SvD = input('Static or Dynamic? ').title()
+            lengthOfList = -1    
             if SvD == 'Static':
-                lengthOfList = -1
                 while lengthOfList < 0:
                     try:
                         lengthOfList = int(input('What is the capacity? '))

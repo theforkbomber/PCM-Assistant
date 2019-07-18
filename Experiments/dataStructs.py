@@ -21,7 +21,7 @@ class Stack:
         elif self.mode == 'dynamic':
             self.tail += 1
             self.contents.append(None)
-            self.contents[self.tail]
+            self.contents[self.tail] = data
 
     """Defining the 'remove' procedure"""
     def remove(self):
@@ -40,8 +40,8 @@ class Stack:
                 print('Stack is empty, cannot remove element.')
             else:
                 self.contents[self.tail] = None
-                self.contents = self.contents[1:]
-                tail -= 1
+                self.contents = self.contents[:len(self.contents)-1]
+                self.tail -= 1
 
 class Queue:
     """Initialising the queue object"""
@@ -113,8 +113,11 @@ class Queue:
                     self.contents = self.contents[1:]
                     self.contents.append(None)
         elif self.mode == 'dynamic':
-            self.contents = self.contents[1:]
-            self.contents.append(None)
-            tail -= 1
+            if self.tail == -1:
+                print('Queue is empty, cannot remove element.')
+            else:
+                self.contents = self.contents[1:]
+                #self.contents.append(None)
+                self.tail -= 1
 
 

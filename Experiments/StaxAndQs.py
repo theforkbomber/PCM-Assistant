@@ -13,7 +13,7 @@ class Stack:
     
     """Defining the 'add' procedure"""
     def add(self, data):
-        if mode == 'static':
+        if self.mode == 'static':
             # If tail is less than the index of the last possible element in the entire list
             # then tail is in the correct range, and depending on the follow-up procedure's
             # functionality, tail cannot go too far low and preceed the logical minimum
@@ -35,14 +35,14 @@ class Stack:
             else:
                 #raise QueueError
                 print('Error encountered (cannot exceed maxElements)')
-        elif mode == 'dynamic':
+        elif self.mode == 'dynamic':
             self.tail += 1
             self.contents.append(None)
-            self.contents[self.tail]
+            self.contents[self.tail] = data
 
     """Defining the 'remove' procedure"""
     def remove(self):
-        if mode == 'static':
+        if self.mode == 'static':
             # If the tail is -1, what is designated as the logical value that
             # represents the logical minimum (if the tail is -1, then the stack
             # is assumed to be empty, and a negative capacity is not compatible with
@@ -65,13 +65,13 @@ class Stack:
             else:
                 self.contents[self.tail] = None
                 self.tail -= 1
-        elif mode == 'dynamic':
+        elif self.mode == 'dynamic':
             if self.tail == -1:
                 print('Stack is empty, cannot remove element.')
             else:
                 self.contents[self.tail] = None
-                self.contents = self.contents[1:]
-                tail -= 1
+                self.contents = self.contents[:len(self.contents)-1]
+                self.tail -= 1
 
 class Queue:
     """Initialising the queue object"""
@@ -87,7 +87,7 @@ class Queue:
 
     """Defining the 'add' procedure"""
     def add(self, data):
-        if mode == 'static':
+        if self.mode == 'static':
             # If the queue is circular, the logic differs a bit compared to a non-circular queue,
             # so the procedure heads down the circular route
             if self.isCircular:
@@ -138,31 +138,18 @@ class Queue:
                 else:
                     #raise QueueError
                     print('Error encountered (cannot exceed maxElements)')
-        elif mode == 'dynamic':
+        elif self.mode == 'dynamic':
             self.contents.append(None)
             self.tail += 1
-            self.contents[self.tail] = data
+            self.contents[self.tail] = self.contents[self.head]
+            self.contents[self.head] = data
+            self.head += 1
 
     """Defining the 'remove' procedure"""
     def remove(self):
-        if mode == 'static':
+        if self.mode == 'static':
             if self.isCircular:
-                # DEBUNKED
-                # A bit rudimentary, as this logic was also only determined with testing and hasn't been
-                # proven logically thus yet, however my theory is that this is actually correct because
-                # after learning about reverse engineering compiled code using disassemblers,
-                # both data structures (stacks and queues) can be said to start from the end or the beginning.
-                # The stack begins from the beginning and so does the non-circular queue, but when making a circular
-                # queue both motions are possible within the range of the actual queue, BUT if head and tail were to
-                # be placed on a number line like so:
-                # CAPACTITY = 5
-                # -1 0 1 2 3 4 5 6 7 8 9 10 11 head 13 14 15 tail
-                # Only the left to right motion is observed
-                # if self.tail == self.head - self.maxElements
-                # can ONLY work if the queue begins from the end, the theory was rather far-fetched and a bit flimsy because
-                # if the number line works itself from left to right, why would the queue's motion change?
-                #
-                # Back to what this is actually doing though; if the tail is equal to what preceeds head, then the queue is 
+                #If the tail is equal to what preceeds head, then the queue is 
                 # assumed to be empty
                 if self.tail == self.head - 1:
                     #print(self.tail == self.head - self.maxElements, self.tail == self.head - 1)
@@ -205,10 +192,14 @@ class Queue:
                     self.tail -= 1
                     self.contents = self.contents[1:]
                     self.contents.append(None)
-        elif mode == 'dynamic':
-            self.contents = self.contents[1:]
-            self.contents.append(None)
-            tail -= 1
+        elif self.mode == 'dynamic':
+            if self.tail == -1:
+                print('Queue is empty, cannot remove element.')
+            else:
+                self.contents = self.contents[1:]
+                #self.contents.append(None)
+                self.tail -= 1
+                self.head -= 1
 
 #TODO
 # [x] Make static data structures
